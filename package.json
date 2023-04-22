@@ -1,0 +1,17 @@
+{
+  "name": "rectangles",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "glob": "^10.2.1",
+    "jimp": "^0.22.7",
+    "xlsx": "^0.18.5"
+  }
+}
