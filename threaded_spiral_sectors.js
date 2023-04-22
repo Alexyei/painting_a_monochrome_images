@@ -78,16 +78,33 @@ export default (image, name) => new Promise(function (resolve, reject)  {
     //     // [0,0,image.length,image[0].length],
     // ]
     const sectors = getSectors(image)
-    console.log(name," n_sec:",sectors.length," sectors: ",sectors)
+    console.log(name," n_sec:",sectors.length)
     let finishedWorkers = 0;
     let total = 0
+    let workers = 0
     for(const sector of sectors){
+        // проверяем, что в секторе есть хотя-бы одна единица
+        let all_zero = true
+        const [rowStart, colStart, rowEnd, colEnd] = sector;
+        for(let i = rowStart;i<rowEnd;++i){
+            for (let j=colStart;j<colEnd;++j)
+                if (image[i][j] !== 0) {
+                    all_zero = false
+                    break;
+                }
+
+            if (!all_zero) break;
+        }
+
+        if (all_zero) continue;
+        else workers++
+
         const worker = new Worker(filename, {
             workerData: {image,sector,name}
         });
         worker.on('message', (value)=>{
             total+=value
-            if (++finishedWorkers === sectors.length)
+            if (++finishedWorkers === workers)
                 resolve(total)
         });
         worker.on('error', reject);
